@@ -7,6 +7,7 @@ $this->Widget->create($this->_('SupportPinPlugin.display_name', true), ['id' => 
 <div class="inner">
   <div class="empty_section">
     <div class="empty_box">
+      <strong><?php $this->_('SupportPinPlugin.client_pin') ?></strong>
       <?php echo $this->Html->ifSet($pin) ? $this->Html->Safe($pin->pin) : $this->_('SupportPinPlugin.nopin', true); ?>
 
       <?php if ($this->Html->ifSet($pin) && $settings->expire === "yes") { ?>
