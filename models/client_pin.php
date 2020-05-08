@@ -20,12 +20,16 @@ class ClientPin extends SupportPinModel
     public function gapfill($length=6)
     {
         $max = str_repeat('9', $length);
-        # TODO: This is A)gross and B) Should only insert for current Company
+        $company_id = Configure::get('Blesta.company_id');
+
         return $this->Record->query(
             'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
-            select id, NOW(), LPAD(FLOOR(RAND() * ?), ?, \'0\')
-            from clients where id not in (select client_id from wm_support_pin)',
-            $max, $length
+            select c.id, NOW(), LPAD(FLOOR(RAND() * ?), ?, \'0\')
+              from clients c, client_groups g
+              where c.client_group_id = g.id
+                and g.company_id = ?
+                and c.id not in (select client_id from wm_support_pin)',
+            $max, $length, $company_id
         );
     }
 
@@ -96,11 +100,11 @@ class ClientPin extends SupportPinModel
         if (!$client_id && $client_no) {
             $company_id = Configure::get('Blesta.company_id');
             $_client = $this->Record->query('
-						  select c.id from clients c, client_groups g
-							where c.id_value = ?
-							and g.id = c.client_group_id
-							and g.company_id = ?
-						', $client_no, $company_id)->fetch();
+              select c.id from clients c, client_groups g
+              where c.id_value = ?
+              and g.id = c.client_group_id
+              and g.company_id = ?
+            ', $client_no, $company_id)->fetch();
             if (!$_client) {
                 return false;
             }
