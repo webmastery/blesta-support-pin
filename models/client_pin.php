@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class ClientPin
+ * Class ClientPin.
  */
 class ClientPin extends SupportPinModel
 {
@@ -13,40 +13,50 @@ class ClientPin extends SupportPinModel
     }
 
     /**
-     * Generate support PIN for all existing clients without one
+     * Generate support PIN for all existing clients without one.
+     *
      * @param int $length
+     *
      * @return void
      */
-    public function gapfill($length=6)
+    public function gapfill($length = 6)
     {
         $max = str_repeat('9', $length);
+
         return $this->Record->query(
-            'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
+            'INSERT INTO '.self::TABLE_PIN.' (client_id, date_updated, pin)
             select id, NOW(), LPAD(FLOOR(RAND() * ?), ?, \'0\')
             from clients where id not in (select client_id from wm_support_pin)',
-            $max, $length
+            $max,
+            $length
         );
     }
 
-    public function updateExpired($mins, $length) {
+    public function updateExpired($mins, $length)
+    {
         $max = str_repeat('9', $length);
+
         return $this->Record->query(
-            'UPDATE ' . self::TABLE_PIN . ' SET date_updated = now() - interval extract(second from now()) second, pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
+            'UPDATE '.self::TABLE_PIN.' SET date_updated = now() - interval extract(second from now()) second, pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
             WHERE date_updated + interval ? minute <= now()',
-            $max, $length, $mins
+            $max,
+            $length,
+            $mins
         );
     }
 
     /**
-     * (Re)generate support PIN for given client ID
+     * (Re)generate support PIN for given client ID.
+     *
      * @param int $client_id
      * @param int $length
+     *
      * @return void
      */
-    public function generate($client_id, $length=6)
+    public function generate($client_id, $length = 6)
     {
         $new = $this->_generate($length);
-        $now = date("Y-m-d H:i:00");
+        $now = date('Y-m-d H:i:00');
 
         return $this->Record
             ->duplicate('pin', '=', $new)
@@ -54,13 +64,15 @@ class ClientPin extends SupportPinModel
             ->insert(self::TABLE_PIN, [
                 'client_id'    => $client_id,
                 'pin'          => $new,
-                'date_updated' => $now
+                'date_updated' => $now,
             ]);
     }
 
     /**
-     * Fetch a clients support PIN
+     * Fetch a clients support PIN.
+     *
      * @param int $client_id
+     *
      * @return void
      */
     public function get($client_id)
@@ -68,49 +80,56 @@ class ClientPin extends SupportPinModel
         $expire_interval = 5;
         if ($expire_interval) {
             return $this->Record->query(
-                'SELECT p.*, `date_updated` + INTERVAL ? MINUTE AS expires from `' . self::TABLE_PIN . '` p where `client_id` = ?',
-                $expire_interval, $client_id
+                'SELECT p.*, `date_updated` + INTERVAL ? MINUTE AS expires from `'.self::TABLE_PIN.'` p where `client_id` = ?',
+                $expire_interval,
+                $client_id
             )->fetch();
         }
 
         return $this->Record->select([
-          'id', 'client_id', 'pin', 'date_updated',
-          # Is it possible to do this math with this ORM thing?
-          //'date_updated + INTERVAL 5 MINUTE' => 'date_expires'
-          ])
+            'id', 'client_id', 'pin', 'date_updated',
+            // Is it possible to do this math with this ORM thing?
+            //'date_updated + INTERVAL 5 MINUTE' => 'date_expires'
+        ])
             ->from(self::TABLE_PIN)
             ->where('client_id', '=', $client_id)
             ->fetch();
     }
 
     /**
-     * Validate a provided client PIN is valid (perhaps useful for API usage)
-     * @param int $client_id
+     * Validate a provided client PIN is valid (perhaps useful for API usage).
+     *
+     * @param int    $client_id
      * @param string $pin
+     *
      * @return bool
      */
-    public function isValid($client_id=null, $client_no=null, $pin)
+    public function isValid($client_id, $client_no, $pin)
     {
         if (!$client_id && $client_no) {
-						$company_id = Configure::get('Blesta.company_id');
-						$_client = $this->Record->query('
+            $company_id = Configure::get('Blesta.company_id');
+            $_client = $this->Record->query('
 						  select c.id from clients c, client_groups g
 							where c.id_value = ?
 							and g.id = c.client_group_id
 							and g.company_id = ?
 						', $client_no, $company_id)->fetch();
-						if (!$_client) { return false; }
-						$client_id = $_client->id;
+            if (!$_client) {
+                return false;
+            }
+            $client_id = $_client->id;
         }
 
         $found = $this->get($client_id);
+
         return $found && $found->pin === $pin;
     }
 
     /**
-     * Delete support PIN for given client ID
+     * Delete support PIN for given client ID.
+     *
      * @param int $client_id
-     * 
+     *
      * @return void
      */
     public function delete($client_id)
@@ -123,10 +142,11 @@ class ClientPin extends SupportPinModel
 
     private function _generate($length)
     {
-      $out = '';
-      for ($i = 0; $i < $length; $i++) {
-        $out .= mt_rand(0, 9);
-      }
-      return $out;
+        $out = '';
+        for ($i = 0; $i < $length; $i++) {
+            $out .= mt_rand(0, 9);
+        }
+
+        return $out;
     }
 }

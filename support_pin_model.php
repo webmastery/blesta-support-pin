@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Support PIN parent model
+ * Support PIN parent model.
  */
 class SupportPinModel extends AppModel
 {

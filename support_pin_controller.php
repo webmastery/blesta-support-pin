@@ -3,21 +3,21 @@
 class SupportPinController extends AppController
 {
     /**
-     * Setup
+     * Setup.
      */
     public function preAction()
     {
         Loader::loadComponents($this, ['Session']);
         $this->requireLogin();
- 
+
         $this->structure->setDefaultView(APPDIR);
         parent::preAction();
 
         // Load config
-        Configure::load('support_pin', dirname(__FILE__) . DS . 'config' . DS);
+        Configure::load('support_pin', dirname(__FILE__).DS.'config'.DS);
 
         // Auto load language for the controller
-        Language::loadLang([Loader::fromCamelCase(get_class($this))], null, dirname(__FILE__) . DS . 'language' . DS);
+        Language::loadLang([Loader::fromCamelCase(get_class($this))], null, dirname(__FILE__).DS.'language'.DS);
 
         $this->uses(['SupportPin.ClientPin', 'SupportPin.SupportPinSettings']);
         $this->settings = $this->SupportPinSettings->getAll();
@@ -26,4 +26,3 @@ class SupportPinController extends AppController
         $this->view->view = 'default';
     }
 }
-
