@@ -10,7 +10,7 @@
 ## API
 ### Validate PIN for a given client
 #### Endpoint
-`<blesta_url>/api/SupportPin.ClientPin/isValid.json"`
+`<blesta_url>/api/SupportPin.ClientPin/isValid.json?client_no=1500&pin=0831`
 
 #### Parameters
 | Parameter  | Description          | Example |  
