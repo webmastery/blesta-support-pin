@@ -1,0 +1,22 @@
+<?php
+$this->Widget->clear();
+$this->Widget->setWidgetButton("arrow");
+$this->Widget->create($this->_('SupportPinPlugin.display_name', true), ['id' => 'wm_support_pin_widget'], 'full');
+?>
+
+<div class="inner">
+  <div class="empty_section">
+    <div class="empty_box">
+      <?php echo $this->Html->ifSet($pin) ? $this->Html->Safe($pin->pin) : $this->_('SupportPinPlugin.nopin', true); ?>
+
+      <?php if ($this->Html->ifSet($pin) && $settings->expire === "yes") { ?>
+      <br>
+      <strong><?php $this->_('SupportPinPlugin.expires') ?></strong>
+      <?php echo $pin->expires ?>
+      <?php } ?>
+    </div>
+  </div>
+</div>
+
+<?php
+$this->Widget->end();

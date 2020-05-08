@@ -1,0 +1,11 @@
+{
+    "version": "0.0.16",
+    "name": "SupportPinPlugin.name",
+    "description": "SupportPinPlugin.description",
+    "authors": [
+        {
+            "name": "Jarrod Linahan <jarrod@webmastery.com.au>",
+            "url": "https://webmastery.com.au/"
+        }
+    ]
+}

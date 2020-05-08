@@ -1,0 +1,49 @@
+<?php
+  $this->Widget->clear();
+  $this->Widget->create($this->_('SupportPinPlugin.admin_index.title', true));
+  $this->Form->create();
+?>
+<div class="inner">
+
+  <div class="pad">
+    <ul>
+        <li>
+        <?php
+            $this->Form->label($this->_("SupportPinPlugin.admin_index.length", true), 'length');
+            $this->Form->fieldSelect('length', $lengths, $length, ['id' => 'length']);
+        ?>
+        </li>
+
+        <li>
+        <?php
+            $this->Form->fieldCheckbox('expire', null, ($expire == "yes"), ['id' => 'expire']);
+            $this->Form->label($this->_("SupportPinPlugin.admin_index.expire", true), 'expire', ['class' => "inline"])
+        ?>
+        </li>
+
+        <li>
+        <?php
+            $this->Form->label($this->_("SupportPinPlugin.admin_index.expire_interval", true), 'interval');
+            $options = ['id' => 'interval'];
+            if ($expire != 'yes') {
+              $options['disabled'] = true;
+            }
+            $this->Form->fieldSelect('interval', $available_intervals, $interval, $options);
+        ?>
+        </li>
+    </ul>
+  </div>
+
+  <div class="button_row">
+    <?php
+    $this->Form->fieldSubmit('save', $this->_('SupportPinPlugin.admin_index.btn_submit', true), ['class' => 'btn btn-primary pull-right']);
+    ?>
+  </div>
+</div>
+
+
+
+<?php
+  $this->Form->end();
+  $this->Widget->end();
+?>
