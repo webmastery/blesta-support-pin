@@ -1,4 +1,9 @@
 # blesta-support-pin
+
+## Features
+- Configurable length PIN
+- Optional PIN expiration/rotation
+
 ![Client Widget Screenshot](docs/client_widget.png?raw=true "Client Widget Screenshot")
 
 ## API
