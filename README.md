@@ -7,6 +7,12 @@
 
 ![Client Widget Screenshot](docs/client_widget.png?raw=true "Client Widget Screenshot")
 
+## Install
+- Download the latest release from https://github.com/webmastery/blesta-support-pin/releases
+- Extract the contents of the downloaded archive, and rename the folder `support_pin`
+- Place this folder in your Blestas `./plugins` directory
+- Visit `yourdomain.com/admin/settings/company/plugins/available/` to install
+
 ## API
 ### Validate PIN for a given client
 #### Endpoint
