@@ -3,6 +3,7 @@
 ## Features
 - Configurable length PIN
 - Optional PIN expiration/rotation
+- Client & admin widget
 
 ![Client Widget Screenshot](docs/client_widget.png?raw=true "Client Widget Screenshot")
 
