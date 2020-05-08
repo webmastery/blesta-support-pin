@@ -5,7 +5,7 @@ $lang['SupportPinPlugin.name'] = 'Support PIN';
 $lang['SupportPinPlugin.display_name'] = 'Support PIN';
 $lang['SupportPinPlugin.description'] = 'A fancy-ass Blesta plugin';
 
-// Plugin settings 
+// Plugin settings
 $lang['SupportPinPlugin.action_client_widget'] = 'Show PIN widget on the client home page';
 $lang['SupportPinPlugin.action_staff_client'] = 'Show PIN widget on client profiles in the admin area';
 $lang['SupportPinPlugin.cron_expire.name'] = 'Regenerate expired PIN';
