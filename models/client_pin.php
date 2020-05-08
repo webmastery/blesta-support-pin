@@ -20,6 +20,7 @@ class ClientPin extends SupportPinModel
     public function gapfill($length=6)
     {
         $max = str_repeat('9', $length);
+        # TODO: This is A)gross and B) Should only insert for current Company
         return $this->Record->query(
             'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
             select id, NOW(), LPAD(FLOOR(RAND() * ?), ?, \'0\')

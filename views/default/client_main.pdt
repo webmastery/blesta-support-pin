@@ -25,7 +25,7 @@ $this->WidgetClient->startBody();
 						<th><?php $this->_('SupportPinPlugin.your_pin') ?></th>
 						<td><?php echo $this->Html->Safe($pin->pin) ?></td>
 				</tr>
-				<?php if ($settings->expire === "yes") { ?>
+				<?php if ($settings->expire) { ?>
 				<tr>
 						<th><?php $this->_('SupportPinPlugin.expires') ?></th>
 						<td><?php echo $this->Html->Safe($pin->expires) ?></td>
