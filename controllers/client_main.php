@@ -8,7 +8,8 @@ class ClientMain extends SupportPinController
         $this->client_id = $this->Session->read('blesta_client_id');
     }
 
-    public function index() {
+    public function index()
+    {
         $pin = $this->ClientPin->get($this->client_id);
 
         // Set some variables to the view

@@ -1,7 +1,7 @@
 <?php
 
-class SupportPinSettings extends SupportPinModel {
-
+class SupportPinSettings extends SupportPinModel
+{
     const TABLE_SETTINGS = "wm_support_pin_settings";
     
     /**
@@ -9,7 +9,8 @@ class SupportPinSettings extends SupportPinModel {
      *
      * @return stdClass A stdClass object with member variables that as setting names and values as setting values
      */
-    public function getAll() {
+    public function getAll()
+    {
         $settings = new stdClass();
                 
         $results = $this->Record
@@ -22,14 +23,14 @@ class SupportPinSettings extends SupportPinModel {
             // Munge some data before returning
             switch ($result->key) {
                 // Booleans
-                case 'send_ip' :
-                case 'use_numbers' :
-                case 'filter_sensitive' :
+                case 'send_ip':
+                case 'use_numbers':
+                case 'filter_sensitive':
                     $settings->{$result->key} = $result->value == "yes" ? true : false;
                     break;
                 
                 // Everything else
-                default :
+                default:
                   $settings->{$result->key} = $result->value;
             }
         }
@@ -41,7 +42,8 @@ class SupportPinSettings extends SupportPinModel {
      *
      * @param array $vars A key/value paired array of settings to update
      */
-    public function update(array $vars) {
+    public function update(array $vars)
+    {
         $rules = [ ];
 
         $this->Input->setRules($rules);
@@ -51,11 +53,13 @@ class SupportPinSettings extends SupportPinModel {
                 // Munge some data before storage
                 switch ($key) {
                     default:
-                        if (is_bool($value))
+                        if (is_bool($value)) {
                             $value = $value ? "yes" : "no";
+                        }
 
-                        if (is_array($value))
+                        if (is_array($value)) {
                             $value = implode(",", $value);
+                        }
                     break;
                 }
 
@@ -71,4 +75,3 @@ class SupportPinSettings extends SupportPinModel {
         }
     }
 }
-

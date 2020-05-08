@@ -7,7 +7,8 @@ class AdminMain extends SupportPinController
         parent::preAction();
     }
 
-    public function client_widget() {
+    public function client_widget()
+    {
         // Ensure a valid client was given
         $this->uses(['Clients']);
         $client_id = (isset($this->get['client_id'])

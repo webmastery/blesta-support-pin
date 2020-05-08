@@ -26,4 +26,3 @@ class SupportPinController extends AppController
         $this->view->view = 'default';
     }
 }
-

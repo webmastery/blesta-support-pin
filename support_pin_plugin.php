@@ -8,19 +8,21 @@ use Blesta\Core\Util\Common\Traits\Container;
 /**
  * Class SupportPinPlugin
  */
-class SupportPinPlugin extends Plugin {
+class SupportPinPlugin extends Plugin
+{
     const NAME        = 'support_pin';
     const TASK_EXPIRE = 'wm_cron_expire';
 
     // Load traits
-		use Container;
+    use Container;
 
     /**
      * @var Monolog\Logger An instance of the logger
      */
     protected $logger;
 
-    public function __construct() {
+    public function __construct()
+    {
         Language::loadLang(self::NAME . '_plugin', null, dirname(__FILE__) . DS . 'language' . DS);
 
         // Load components required by this plugin
@@ -31,7 +33,8 @@ class SupportPinPlugin extends Plugin {
         $this->logger = $this->getFromContainer('logger');
     }
 
-    public function install($plugin_id) {
+    public function install($plugin_id)
+    {
         if (!isset($this->Record)) {
             Loader::loadComponents($this, ['Record']);
         }
@@ -74,7 +77,8 @@ class SupportPinPlugin extends Plugin {
         # TODO (maybe?): Create a PIN for all existing clients?
     }
 
-    public function uninstall($plugin_id, $last_instance) {
+    public function uninstall($plugin_id, $last_instance)
+    {
         if ($last_instance) {
             // Try to remove DB table(s) & cron tasks
             Loader::loadModels($this, [
@@ -93,7 +97,8 @@ class SupportPinPlugin extends Plugin {
         }
     }
 
-    public function upgrade($current_version, $plugin_id) {
+    public function upgrade($current_version, $plugin_id)
+    {
         #
         # TODO: Place upgrade logic here if/when required
         #
@@ -139,17 +144,17 @@ class SupportPinPlugin extends Plugin {
     public function onClientCreate($event)
     {
         Loader::loadModels($this, ['SupportPin.ClientPin', 'SupportPin.SupportPinSettings']);
-				$settings = $this->SupportPinSettings->getAll();
+        $settings = $this->SupportPinSettings->getAll();
         $params = $event->getParams();
         $client = $params['client'];
         $id = $client->id;
 
         // Generate PIN record for client $id
-				try {
-						$this->ClientPin->generate($client->id, $settings->length);
-				} catch (Exception $e) {
-						$this->logger->error($e->getMessage());
-				}
+        try {
+            $this->ClientPin->generate($client->id, $settings->length);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     public function onClientDelete($event)
@@ -160,12 +165,11 @@ class SupportPinPlugin extends Plugin {
         $id = $client->id;
 
         // Remove the PIN record for client $id
-				try {
-						$this->ClientPin->delete($client->id);
-				} catch (Exception $e) {
-						$this->logger->error($e->getMessage());
-				}
-
+        try {
+            $this->ClientPin->delete($client->id);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     private function getCronTasks()
@@ -235,17 +239,17 @@ class SupportPinPlugin extends Plugin {
         }
     }
 
-		// This method is invoked once for each different cron task configured by the plugin and identified by $key
+    // This method is invoked once for each different cron task configured by the plugin and identified by $key
     public function cron($key)
     {
         Loader::loadModels($this, ['SupportPin.ClientPin', 'SupportPin.SupportPinSettings']);
 
         switch ($key) {
             case self::TASK_EXPIRE:
-								$settings = $this->SupportPinSettings->getAll();
-								if ($settings->expire === "yes") {
-								    $this->ClientPin->updateExpired($settings->interval, $settings->length);
-								}
+                                $settings = $this->SupportPinSettings->getAll();
+                                if ($settings->expire === "yes") {
+                                    $this->ClientPin->updateExpired($settings->interval, $settings->length);
+                                }
             break;
         }
     }

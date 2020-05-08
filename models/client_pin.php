@@ -28,7 +28,8 @@ class ClientPin extends SupportPinModel
         );
     }
 
-    public function updateExpired($mins, $length) {
+    public function updateExpired($mins, $length)
+    {
         $max = str_repeat('9', $length);
         return $this->Record->query(
             'UPDATE ' . self::TABLE_PIN . ' SET date_updated = now() - interval extract(second from now()) second, pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
@@ -92,15 +93,17 @@ class ClientPin extends SupportPinModel
     public function isValid($client_id=null, $client_no=null, $pin)
     {
         if (!$client_id && $client_no) {
-						$company_id = Configure::get('Blesta.company_id');
-						$_client = $this->Record->query('
+            $company_id = Configure::get('Blesta.company_id');
+            $_client = $this->Record->query('
 						  select c.id from clients c, client_groups g
 							where c.id_value = ?
 							and g.id = c.client_group_id
 							and g.company_id = ?
 						', $client_no, $company_id)->fetch();
-						if (!$_client) { return false; }
-						$client_id = $_client->id;
+            if (!$_client) {
+                return false;
+            }
+            $client_id = $_client->id;
         }
 
         $found = $this->get($client_id);
@@ -110,7 +113,7 @@ class ClientPin extends SupportPinModel
     /**
      * Delete support PIN for given client ID
      * @param int $client_id
-     * 
+     *
      * @return void
      */
     public function delete($client_id)
@@ -123,10 +126,10 @@ class ClientPin extends SupportPinModel
 
     private function _generate($length)
     {
-      $out = '';
-      for ($i = 0; $i < $length; $i++) {
-        $out .= mt_rand(0, 9);
-      }
-      return $out;
+        $out = '';
+        for ($i = 0; $i < $length; $i++) {
+            $out .= mt_rand(0, 9);
+        }
+        return $out;
     }
 }
