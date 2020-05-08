@@ -247,10 +247,10 @@ class SupportPinPlugin extends Plugin
 
         switch ($key) {
             case self::TASK_EXPIRE:
-                                $settings = $this->SupportPinSettings->getAll();
-                                if ($settings->expire) {
-                                    $this->ClientPin->updateExpired($settings->interval, $settings->length);
-                                }
+                $settings = $this->SupportPinSettings->getAll();
+                if ($settings->expire) {
+                    $this->ClientPin->updateExpired($settings->interval, $settings->length);
+                }
             break;
         }
     }
