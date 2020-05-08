@@ -23,9 +23,7 @@ class SupportPinSettings extends SupportPinModel
             // Munge some data before returning
             switch ($result->key) {
                 // Booleans
-                case 'send_ip':
-                case 'use_numbers':
-                case 'filter_sensitive':
+                case 'expire':
                     $settings->{$result->key} = $result->value == "yes" ? true : false;
                     break;
                 

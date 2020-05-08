@@ -40,6 +40,13 @@ class SupportPinPlugin extends Plugin
         }
         Loader::loadModels($this, ['SupportPin.ClientPin', 'SupportPin.SupportPinSettings']);
 
+        // Default settings
+        $settings = [
+            'interval' => 60,
+            'length'   => 6,
+            'expire'   => 'yes'
+        ];
+
         try {
             $this->Record
                 ->setField('id', ['type'=>'int', 'size'=>10, 'unsigned'=>true, 'auto_increment'=>true])
@@ -59,13 +66,6 @@ class SupportPinPlugin extends Plugin
                 ->setKey(['company_id', 'key'], 'primary')
                 ->create(SupportPinSettings::TABLE_SETTINGS, true);
 
-            // Insert default settings
-            $settings = [
-                'interval' => 60,
-                'length'   => 6,
-                'expire'   => 'yes'
-            ];
-
             $this->SupportPinSettings->update($settings);
         } catch (Exception $e) {
             $this->Input->setErrors(['db'=> ['create'=>$e->getMessage()]]);
@@ -74,7 +74,8 @@ class SupportPinPlugin extends Plugin
 
         $this->addCronTasks($this->getCronTasks());
 
-        # TODO (maybe?): Create a PIN for all existing clients?
+        // Create a PIN for all existing clients
+        $this->ClientPin->gapfill($settings['length']);
     }
 
     public function uninstall($plugin_id, $last_instance)
@@ -247,7 +248,7 @@ class SupportPinPlugin extends Plugin
         switch ($key) {
             case self::TASK_EXPIRE:
                                 $settings = $this->SupportPinSettings->getAll();
-                                if ($settings->expire === "yes") {
+                                if ($settings->expire) {
                                     $this->ClientPin->updateExpired($settings->interval, $settings->length);
                                 }
             break;
