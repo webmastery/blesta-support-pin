@@ -9,7 +9,7 @@ class SupportPinSettings extends SupportPinModel
         'interval' => 60,
         'expire' => 'yes'
     ];
-    
+
     private $min_length = 4;
     private $max_length = 12;
 
@@ -21,7 +21,7 @@ class SupportPinSettings extends SupportPinModel
     public function getAll()
     {
         $settings = [];
-                
+
         $results = $this->Record
             ->select(['key', 'value'])
             ->from(self::TABLE_SETTINGS)
@@ -32,17 +32,17 @@ class SupportPinSettings extends SupportPinModel
             switch ($result->key) {
                 // Booleans
                 case 'expire':
-                    $settings[$result->key] = $result->value == "yes" 
-                        ? true 
+                    $settings[$result->key] = $result->value == "yes"
+                        ? true
                         : false;
                     break;
-                
+
                 // Everything else
                 default:
                   $settings[$result->key] = $result->value;
             }
         }
-        
+
         # TODO: Merge any missing fields with defaults
 
         return (object)$settings;
@@ -102,7 +102,7 @@ class SupportPinSettings extends SupportPinModel
               'valid' => [
                   'rule' => [
                       'in_array',
-                      array_keys($this->getAllowedLengths())    
+                      array_keys($this->getAllowedLengths())
                   ],
                   'message' => 'Invalid length'
               ]

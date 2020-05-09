@@ -61,7 +61,7 @@ class AdminManagePlugin extends AppController
 
             // Regenerate all existing pins if length has changed
             if ($settings->length != $updated_settings->length) {
-              $this->ClientPin->regenerateAll($updated_settings->length);
+                $this->ClientPin->regenerateAll($updated_settings->length);
             }
 
             $settings = $updated_settings;
