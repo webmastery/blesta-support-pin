@@ -17,14 +17,14 @@ class ClientPin extends SupportPinModel
      * @param int $length
      * @return void
      */
-    public function gapfill($length=6)
+    public function gapfill($length)
     {
         $max = str_repeat('9', $length);
         $company_id = Configure::get('Blesta.company_id');
 
         return $this->Record->query(
             'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
-            select c.id, NOW(), LPAD(FLOOR(RAND() * ?), ?, \'0\')
+            select c.id, NOW() - interval extract(second from now()) second, LPAD(FLOOR(RAND() * ?), ?, \'0\')
               from clients c, client_groups g
               where c.client_group_id = g.id
                 and g.company_id = ?
@@ -37,10 +37,27 @@ class ClientPin extends SupportPinModel
     {
         $max = str_repeat('9', $length);
         return $this->Record->query(
-            'UPDATE ' . self::TABLE_PIN . ' SET date_updated = now() - interval extract(second from now()) second, pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
+            'UPDATE ' . self::TABLE_PIN . '
+            SET date_updated = now() - interval extract(second from now()) second,
+            pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
             WHERE date_updated + interval ? minute <= now()',
             $max, $length, $mins
         );
+    }
+
+    public function regenerateAll($length)
+    {
+        try {
+            $this->Record->begin();
+
+            $this->deleteAll();
+            $this->gapfill($length);
+
+            $this->Record->commit();
+        } catch (Exception $e) {
+            $this->Record->rollback();
+            throw $e;
+        }
     }
 
     /**

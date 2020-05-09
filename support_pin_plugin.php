@@ -41,11 +41,7 @@ class SupportPinPlugin extends Plugin
         Loader::loadModels($this, ['SupportPin.ClientPin', 'SupportPin.SupportPinSettings']);
 
         // Default settings
-        $settings = [
-            'interval' => 60,
-            'length'   => 6,
-            'expire'   => 'yes'
-        ];
+        $settings = $this->SupportPinSettings->getDefaultSettings();
 
         try {
             $this->Record

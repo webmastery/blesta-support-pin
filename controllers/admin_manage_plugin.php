@@ -28,51 +28,62 @@ class AdminManagePlugin extends AppController
      */
     public function index()
     {
-        $this->uses(['SupportPin.SupportPinSettings']);
         $this->init();
+        $this->uses([
+            'SupportPin.SupportPinSettings',
+            'SupportPin.ClientPin'
+        ]);
+
+        $settings = $this->SupportPinSettings->getAll();
 
         if (!empty($this->post)) {
-            $update = [
-                'interval'    => $this->Html->ifSet($this->post['interval']),
-                'expire'      => $this->Html->ifSet($this->post['expire']) == "on" ? "yes" : "no",
-                'length'      => $this->post['length'],
-            ];
-            $this->SupportPinSettings->update($update);
+            $defaults = $this->SupportPinSettings->getDefaultSettings();
+            $updated_settings = $this->SupportPinSettings->update([
+                'interval' => $this->Html->ifSet(
+                    $this->post['interval'],
+                    $defaults['interval']
+                ),
+                'length'   => $this->Html->ifSet(
+                    $this->post['length'],
+                    $defaults['length']
+                ),
+                'expire'   => $this->Html->ifSet($this->post['expire']) == "on" ? "yes" : "no",
+            ]);
 
             if (($errors = $this->SupportPinSettings->errors())) {
                 $this->parent->setMessage('error', $errors);
             } else {
-                $this->parent->setMessage('message', Language::_('SupportPinPlugin.settings_updated', true));
+                $this->parent->setMessage(
+                    'message',
+                    Language::_('SupportPinPlugin.settings_updated', true)
+                );
             }
+
+            // Regenerate all existing pins if length has changed
+            if ($settings->length != $updated_settings->length) {
+                $this->ClientPin->regenerateAll($updated_settings->length);
+            }
+
+            $settings = $updated_settings;
         }
 
-        $settings = $this->SupportPinSettings->getAll();
         $plugin_id = $this->get[0];
 
-        $lengths = [];
-        for ($i = 4; $i <= 12; $i++) {
-            $lengths[$i] = $i;
-        }
-        
         // Set up expiry interval selections
-        $available_intervals = [];
-        $available_intervals['5'] = '5 Minutes';
-        $available_intervals['10'] = '10 Minutes';
-        $available_intervals['15'] = '15 Minutes';
-        $available_intervals['30'] = '30 Minutes';
-
-        for ($i = 1; $i <= 24; $i++) {
-            $available_intervals[$i * 60] = $i . " Hours";
-        }
-
-        for ($i = 1; $i <= 30; $i++) {
-            $available_intervals[$i * 1440] = $i . " Days";
-        }
+        $lengths = $this->SupportPinSettings->getAllowedLengths();
+        $available_intervals = $this->SupportPinSettings->getAvailableIntervals();
 
         // Set the view to render for all actions under this controller
         return $this->partial(
             'admin_manage_plugin',
-             array_merge(compact(['plugin_id', 'available_intervals', 'lengths']), json_decode(json_encode($settings), true))
+             array_merge(
+                 compact([
+                    'plugin_id',
+                    'available_intervals',
+                    'lengths'
+                ]),
+                json_decode(json_encode($settings), true)
+            )
         );
     }
 }
