@@ -22,7 +22,7 @@ class ClientPin extends SupportPinModel
         $max = str_repeat('9', $length);
         $company_id = Configure::get('Blesta.company_id');
 
-        return $this->Record->query(
+        $this->Record->query(
             'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
             select c.id, timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second, LPAD(FLOOR(RAND() * ?), ?, \'0\')
               from clients c, client_groups g
@@ -36,12 +36,18 @@ class ClientPin extends SupportPinModel
     public function updateExpired($mins, $length)
     {
         $max = str_repeat('9', $length);
-        return $this->Record->query(
-            'UPDATE ' . self::TABLE_PIN . '
-            SET date_updated = timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second,
-            pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
-            WHERE date_updated + interval ? minute <= timestamp(utc_timestamp)',
-            $max, $length, $mins
+				$company_id = Configure::get('Blesta.company_id');
+        $this->Record->query(
+						'UPDATE ' . self::TABLE_PIN . ' p
+						INNER JOIN clients c
+							 ON c.id = p.client_id
+						INNER join client_groups g
+							 ON g.id = c.client_group_id
+							AND g.company_id = ?
+						SET date_updated = timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second,
+								pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
+						WHERE p.date_updated + interval ? minute <= timestamp(utc_timestamp)',
+            $company_id, $max, $length, $mins
         );
     }
 
@@ -71,7 +77,7 @@ class ClientPin extends SupportPinModel
         $new = $this->_generate($length);
         $now = date("Y-m-d H:i:00");
 
-        return $this->Record
+        $this->Record
             ->duplicate('pin', '=', $new)
             ->duplicate('date_updated', '=', $now)
             ->insert(self::TABLE_PIN, [
@@ -141,7 +147,7 @@ class ClientPin extends SupportPinModel
      */
     public function delete($client_id)
     {
-        return $this->Record
+        $this->Record
             ->from(self::TABLE_PIN)
             ->where('client_id', '=', $client_id)
             ->delete();
@@ -154,7 +160,7 @@ class ClientPin extends SupportPinModel
     public function deleteAll()
     {
         $company_id = Configure::get('Blesta.company_id');
-        return $this->Record
+        $this->Record
             ->from(self::TABLE_PIN)
             ->from('clients')
             ->from('client_groups')
