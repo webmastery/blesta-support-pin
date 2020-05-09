@@ -72,4 +72,15 @@ class SupportPinSettings extends SupportPinModel
             }
         }
     }
+
+    /**
+     * Remove all settings for current company
+     */
+    public function deleteAll()
+    {
+        return $this->Record
+            ->from(self::TABLE_SETTINGS)
+            ->where('company_id', '=', Configure::get('Blesta.company_id'))
+            ->delete();
+    }
 }

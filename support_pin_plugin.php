@@ -80,13 +80,16 @@ class SupportPinPlugin extends Plugin
 
     public function uninstall($plugin_id, $last_instance)
     {
+        Loader::loadModels($this, [
+            'SupportPin.ClientPin',
+            'SupportPin.SupportPinSettings'
+        ]);
+
+        $this->ClientPin->deleteAll();
+        $this->SupportPinSettings->deleteAll();
+
         if ($last_instance) {
             // Try to remove DB table(s) & cron tasks
-            Loader::loadModels($this, [
-                'SupportPin.ClientPin',
-                'SupportPin.SupportPinSettings'
-            ]);
-
             try {
                 $this->Record->drop(ClientPin::TABLE_PIN);
                 $this->Record->drop(SupportPinSettings::TABLE_SETTINGS);

@@ -129,6 +129,23 @@ class ClientPin extends SupportPinModel
             ->delete();
     }
 
+    /**
+     * Delete all PINs for all clients in given company
+     * @return void
+     */
+    public function deleteAll()
+    {
+      $company_id = Configure::get('Blesta.company_id');
+      return $this->Record
+        ->from(self::TABLE_PIN)
+        ->from('clients')
+        ->from('client_groups')
+        ->where(self::TABLE_PIN . '.client_id', '=', 'clients.id', false)
+        ->where('clients.client_group_id', '=', 'client_groups.id', false)
+        ->where('client_groups.company_id', '=', $company_id)
+        ->delete([self::TABLE_PIN]);
+    }
+
     private function _generate($length)
     {
         $out = '';
