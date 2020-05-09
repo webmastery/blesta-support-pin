@@ -28,7 +28,7 @@ $this->WidgetClient->startBody();
         <?php if ($settings->expire && $this->Html->ifSet($pin->expires)) { ?>
         <tr>
             <th><?php $this->_('SupportPinPlugin.expires') ?></th>
-            <td><?php echo $this->Html->Safe($pin->expires) ?></td>
+            <td><?php echo $this->Date->cast($pin->expires, 'F, j Y H:i') ?></td>
         </tr>
         <?php } ?>
     </table>

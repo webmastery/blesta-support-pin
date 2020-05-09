@@ -24,7 +24,7 @@ class ClientPin extends SupportPinModel
 
         return $this->Record->query(
             'INSERT INTO ' . self::TABLE_PIN . ' (client_id, date_updated, pin)
-            select c.id, NOW() - interval extract(second from now()) second, LPAD(FLOOR(RAND() * ?), ?, \'0\')
+            select c.id, timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second, LPAD(FLOOR(RAND() * ?), ?, \'0\')
               from clients c, client_groups g
               where c.client_group_id = g.id
                 and g.company_id = ?
@@ -38,9 +38,9 @@ class ClientPin extends SupportPinModel
         $max = str_repeat('9', $length);
         return $this->Record->query(
             'UPDATE ' . self::TABLE_PIN . '
-            SET date_updated = now() - interval extract(second from now()) second,
+            SET date_updated = timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second,
             pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
-            WHERE date_updated + interval ? minute <= now()',
+            WHERE date_updated + interval ? minute <= timestamp(utc_timestamp)',
             $max, $length, $mins
         );
     }
