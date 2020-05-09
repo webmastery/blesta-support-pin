@@ -1,6 +1,6 @@
 <?php
 if (!$this->Html->ifSet($render_section)) {
- 	echo '<div class="col-md-6 col-md-offset-3">';
+   echo '<div class="col-md-6 col-md-offset-3">';
 }
 
 $this->WidgetClient->clear();
@@ -11,48 +11,48 @@ $this->WidgetClient->startBody();
 ?>
 
 <?php if ($this->_('SupportPinPlugin.client_overview', true)) { ?>
-	<p><?php $this->_('SupportPinPlugin.client_overview') ?></p>
+  <p><?php $this->_('SupportPinPlugin.client_overview') ?></p>
 <?php } ?>
 
 <?php if ($this->Html->ifSet($pin)) { ?>
 <div class="well well-support-pin">
-		<table class="table-support-pin">
-				<tr>
-						<th><?php $this->_('SupportPinPlugin.client_no') ?></th>
-						<td><?php echo $this->Html->ifSet($client_no) ?></td>
-				</tr>
-				<tr>
-						<th><?php $this->_('SupportPinPlugin.your_pin') ?></th>
-						<td><?php echo $this->Html->Safe($pin->pin) ?></td>
-				</tr>
-				<?php if ($settings->expire) { ?>
-				<tr>
-						<th><?php $this->_('SupportPinPlugin.expires') ?></th>
-						<td><?php echo $this->Html->Safe($pin->expires) ?></td>
-				</tr>
-				<?php } ?>
-		</table>
+    <table class="table-support-pin">
+        <tr>
+            <th><?php $this->_('SupportPinPlugin.client_no') ?></th>
+            <td><?php echo $this->Html->ifSet($client_no) ?></td>
+        </tr>
+        <tr>
+            <th><?php $this->_('SupportPinPlugin.your_pin') ?></th>
+            <td><?php echo $this->Html->Safe($pin->pin) ?></td>
+        </tr>
+        <?php if ($settings->expire && $this->Html->ifSet($pin->expires)) { ?>
+        <tr>
+            <th><?php $this->_('SupportPinPlugin.expires') ?></th>
+            <td><?php echo $this->Html->Safe($pin->expires) ?></td>
+        </tr>
+        <?php } ?>
+    </table>
 </div>
 <?php } else { ?>
 <p class="text-center">
-		<a class="btn btn-default" href=""><?php $this->_('SupportPinPlugin.generate') ?></a>
+    <a class="btn btn-default" href=""><?php $this->_('SupportPinPlugin.generate') ?></a>
 </p>
 <?php } ?>
 
 <style type="text/css">
 .well.well-support-pin {
-	padding: 10px;
-	margin-bottom: 0;
-	max-width: 100%;
-	overflow-y: auto;
+  padding: 10px;
+  margin-bottom: 0;
+  max-width: 100%;
+  overflow-y: auto;
 }
 
 .table-support-pin {
-	border: none;
+  border: none;
 }
 
 .table-support-pin th {
-	padding-right: 5px;
+  padding-right: 5px;
 }
 </style>
 
@@ -61,5 +61,5 @@ $this->WidgetClient->endBody();
 $this->WidgetClient->end();
 
 if (!$this->Html->ifSet($render_section)) {
- 	echo '</div>';
+   echo '</div>';
 }

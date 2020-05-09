@@ -65,28 +65,24 @@ class ClientPin extends SupportPinModel
     }
 
     /**
-     * Fetch a clients support PIN
+     * Fetch a clients support PIN details
      * @param int $client_id
      * @return void
      */
-    public function get($client_id)
+    public function get($client_id, $expire_interval = null)
     {
-        $expire_interval = 5;
+        $expire_interval = $expire_interval ? intval($expire_interval) : null;
+
+        $query = $this->Record
+            ->select(['id', 'client_id', 'pin', 'date_updated'])
+            ->from(self::TABLE_PIN)
+            ->where('client_id', '=', $client_id);
+
         if ($expire_interval) {
-            return $this->Record->query(
-                'SELECT p.*, `date_updated` + INTERVAL ? MINUTE AS expires from `' . self::TABLE_PIN . '` p where `client_id` = ?',
-                $expire_interval, $client_id
-            )->fetch();
+            $query->select(['date_updated + INTERVAL ' . $expire_interval . ' MINUTE AS expires'], false);
         }
 
-        return $this->Record->select([
-          'id', 'client_id', 'pin', 'date_updated',
-          # Is it possible to do this math with this ORM thing?
-          //'date_updated + INTERVAL 5 MINUTE' => 'date_expires'
-          ])
-            ->from(self::TABLE_PIN)
-            ->where('client_id', '=', $client_id)
-            ->fetch();
+        return $query->fetch();
     }
 
     /**

@@ -10,7 +10,7 @@ class ClientMain extends SupportPinController
 
     public function index()
     {
-        $pin = $this->ClientPin->get($this->client_id);
+        $pin = $this->ClientPin->get($this->client_id, $this->settings->interval);
 
         // Set some variables to the view
         $this->set("settings", $this->settings);

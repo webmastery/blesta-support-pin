@@ -25,9 +25,6 @@
         <?php
             $this->Form->label($this->_("SupportPinPlugin.admin_index.expire_interval", true), 'interval');
             $options = ['id' => 'interval'];
-            if ($expire != 'yes') {
-              $options['disabled'] = true;
-            }
             $this->Form->fieldSelect('interval', $available_intervals, $interval, $options);
         ?>
         </li>

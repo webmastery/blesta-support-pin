@@ -21,7 +21,7 @@ class AdminMain extends SupportPinController
         }
 
         // Load client's pin
-        $pin = $this->ClientPin->get($client_id);
+        $pin = $this->ClientPin->get($client_id, $this->settings->interval);
 
         // Set some variables to the view
         $this->set("settings", $this->settings);
