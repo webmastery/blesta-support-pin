@@ -36,9 +36,9 @@ class ClientPin extends SupportPinModel
     public function updateExpired($mins, $length)
     {
         $max = str_repeat('9', $length);
-				$company_id = Configure::get('Blesta.company_id');
+        $company_id = Configure::get('Blesta.company_id');
         $this->Record->query(
-						'UPDATE ' . self::TABLE_PIN . ' p
+                        'UPDATE ' . self::TABLE_PIN . ' p
 						INNER JOIN clients c
 							 ON c.id = p.client_id
 						INNER join client_groups g
