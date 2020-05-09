@@ -135,8 +135,8 @@ class ClientPin extends SupportPinModel
      */
     public function deleteAll()
     {
-      $company_id = Configure::get('Blesta.company_id');
-      return $this->Record
+        $company_id = Configure::get('Blesta.company_id');
+        return $this->Record
         ->from(self::TABLE_PIN)
         ->from('clients')
         ->from('client_groups')
