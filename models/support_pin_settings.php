@@ -43,9 +43,8 @@ class SupportPinSettings extends SupportPinModel
             }
         }
 
-        # TODO: Merge any missing fields with defaults
-
-        return (object)$settings;
+        // Merge any missing fields with defaults
+        return (object)$this->defaults($settings);
     }
 
     /**
@@ -150,5 +149,13 @@ class SupportPinSettings extends SupportPinModel
         }
 
         return $intervals;
+    }
+
+    private function defaults($values)
+    {
+      return array_merge(
+          $this->defaults,
+          array_intersect_key($values, $this->defaults)
+      );
     }
 }
