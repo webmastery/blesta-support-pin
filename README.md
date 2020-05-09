@@ -1,3 +1,4 @@
+![Plugin logo](views/default/images/logo.png?raw=true "Plugin logo")
 # blesta-support-pin
 
 ## Features
