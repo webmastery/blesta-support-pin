@@ -13,7 +13,7 @@ $this->Widget->create($this->_('SupportPinPlugin.display_name', true), ['id' => 
       <?php if ($this->Html->ifSet($pin) && $settings->expire) { ?>
       <br>
       <strong><?php $this->_('SupportPinPlugin.expires') ?></strong>
-      <?php echo $pin->expires ?>
+      <?php echo $this->Date->cast($pin->expires, 'F, j Y H:i') ?>
       <?php } ?>
     </div>
   </div>
