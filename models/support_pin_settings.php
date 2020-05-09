@@ -153,7 +153,7 @@ class SupportPinSettings extends SupportPinModel
 
     private function defaults($values)
     {
-      return array_merge(
+        return array_merge(
           $this->defaults,
           array_intersect_key($values, $this->defaults)
       );
