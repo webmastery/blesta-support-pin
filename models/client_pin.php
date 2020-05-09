@@ -130,7 +130,7 @@ class ClientPin extends SupportPinModel
     }
 
     /**
-     * Delete all PINs for all clients in given company
+     * Delete all PINs for all clients in current company
      * @return void
      */
     public function deleteAll()
