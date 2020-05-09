@@ -36,17 +36,17 @@ class ClientPin extends SupportPinModel
     public function updateExpired($mins, $length)
     {
         $max = str_repeat('9', $length);
-				$company_id = Configure::get('Blesta.company_id');
+        $company_id = Configure::get('Blesta.company_id');
         $this->Record->query(
-						'UPDATE ' . self::TABLE_PIN . ' p
-						INNER JOIN clients c
-							 ON c.id = p.client_id
-						INNER join client_groups g
-							 ON g.id = c.client_group_id
-							AND g.company_id = ?
-						SET date_updated = timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second,
-								pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
-						WHERE p.date_updated + interval ? minute <= timestamp(utc_timestamp)',
+            'UPDATE ' . self::TABLE_PIN . ' p
+            INNER JOIN clients c
+               ON c.id = p.client_id
+            INNER join client_groups g
+               ON g.id = c.client_group_id
+              AND g.company_id = ?
+            SET date_updated = timestamp(utc_timestamp) - interval extract(second from timestamp(utc_timestamp)) second,
+                pin = LPAD(FLOOR(RAND() * ?), ?, \'0\')
+            WHERE p.date_updated + interval ? minute <= timestamp(utc_timestamp)',
             $company_id, $max, $length, $mins
         );
     }
