@@ -3,7 +3,7 @@
 // Plugin info
 $lang['SupportPinPlugin.name'] = 'Support PIN';
 $lang['SupportPinPlugin.display_name'] = 'Support PIN';
-$lang['SupportPinPlugin.description'] = 'A fancy-ass Blesta plugin';
+$lang['SupportPinPlugin.description'] = 'Assign clients a support PIN to use when making contact.';
 
 // Plugin settings
 $lang['SupportPinPlugin.action_client_widget'] = 'Show PIN widget on the client home page';
