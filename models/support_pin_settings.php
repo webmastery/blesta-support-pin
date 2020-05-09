@@ -32,8 +32,8 @@ class SupportPinSettings extends SupportPinModel
             switch ($result->key) {
                 // Booleans
                 case 'expire':
-                    $settings[$result->key] = $result->value == "yes" 
-                        ? true 
+                    $settings[$result->key] = $result->value == "yes"
+                        ? true
                         : false;
                     break;
                 
@@ -102,7 +102,7 @@ class SupportPinSettings extends SupportPinModel
               'valid' => [
                   'rule' => [
                       'in_array',
-                      array_keys($this->getAllowedLengths())    
+                      array_keys($this->getAllowedLengths())
                   ],
                   'message' => 'Invalid length'
               ]
