@@ -2,6 +2,8 @@
 
 class ClientMain extends SupportPinController
 {
+    private $client_id = null;
+
     public function preAction()
     {
         parent::preAction();
