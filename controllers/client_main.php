@@ -10,12 +10,15 @@ class ClientMain extends SupportPinController
 
     public function index()
     {
+        Loader::loadModels($this, ['Clients']);
+        $client = $this->Clients->get($this->client_id);
+
         $pin = $this->ClientPin->get($this->client_id, $this->settings->interval);
 
         // Set some variables to the view
         $this->set("settings", $this->settings);
         $this->set("pin", $pin);
-        $this->set("client_no", $this->client->id_value);
+        $this->set("client_no", $client->id_value);
 
         // Automatically renders the view in /plugins/my_plugin/views/default/client_main.pdt
         return $this->renderAjaxWidgetIfAsync(false);
